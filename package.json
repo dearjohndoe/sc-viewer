@@ -1,12 +1,15 @@
 {
   "name": "ton-storage-viewer",
   "version": "0.1.0",
+  "homepage": "https://dearjohndoe.github.io/sc-viewer",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
+    "export": "next build && next export",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "deploy": "npm run build && gh-pages -d build --dotfiles"
   },
   "dependencies": {
     "@ton/core": "^0.61.0",
@@ -25,6 +28,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
+    "gh-pages": "^6.3.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

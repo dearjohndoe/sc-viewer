@@ -1,3 +1,5 @@
+/* eslint-disable prefer-const */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ContractInfo, ContractProviders, ProviderInfo, StorageContractFull } from "@/types/blockchain";
 import { Address, TonClient, TupleReader } from "@ton/ton";
 
@@ -43,7 +45,7 @@ export async function fetchStorageContractFullInfo(userAddr: string): Promise<St
 async function fetchProviders(userAddr: string): Promise<ContractProviders | Error> {
   await new Promise(resolve => setTimeout(resolve, 1300));
 
-  let info: ContractProviders = {
+  const info: ContractProviders = {
     providers: [],
     balance: "0"
   };
@@ -67,13 +69,13 @@ async function fetchProviders(userAddr: string): Promise<ContractProviders | Err
     console.info("Gas used:", storageInfo.gas_used);
     console.info("Stack:", storageInfo.stack);
 
-    let p = storageInfo.stack.pop();
+    const p = storageInfo.stack.pop();
     if (p.type === 'tuple') {
-      let prs = p.items;
-      let pr: any;
+      const prs = p.items;
+      let pr: unknown;
       while (pr = prs.pop()) {
         console.info("Provider:", pr);
-        let provider: ProviderInfo = {
+        const provider: ProviderInfo = {
           cid: '',
           ratePerMB: 0,
           maxSpan: 0,
@@ -82,33 +84,33 @@ async function fetchProviders(userAddr: string): Promise<ContractProviders | Err
           nonce: "0"
         };
 
-        let nonce = pr.pop(); // nonce
+        const nonce = (pr as any).pop(); // nonce
         console.info("nonce:", nonce);
         provider.nonce = (nonce as bigint).toString();
 
-        let nextProofByte = pr.pop(); // nextProofByte
+        const nextProofByte = (pr as any).pop(); // nextProofByte
         console.info("nextProofByte:", nextProofByte);
         provider.nextProofByte = (nextProofByte as bigint).toString();
 
-        let lastProof = pr.pop(); // lastProof
+        const lastProof = (pr as any).pop(); // lastProof
         console.info("lastProof:", lastProof);
         provider.lastProof = Number(lastProof as bigint);
 
-        let maxSpan = pr.pop(); // maxSpan
+        const maxSpan = (pr as any).pop(); // maxSpan
         console.info("maxSpan:", maxSpan);
         provider.maxSpan = Number(maxSpan as bigint);
 
-        let ratePerMB = pr.pop(); // ratePerMB
+        const ratePerMB = (pr as any).pop(); // ratePerMB
         provider.ratePerMB = Number(ratePerMB);
 
-        let cid = pr.pop(); // cid
+        const cid = (pr as any).pop(); // cid
         provider.cid = (cid as bigint).toString(16).padStart(64, '0').toUpperCase();
 
         info.providers.push(provider);
       }
     }
 
-    let balance = storageInfo.stack.pop();
+    const balance = storageInfo.stack.pop();
     if (balance.type === 'int') {
       info.balance = balance.value.toString();
     }
